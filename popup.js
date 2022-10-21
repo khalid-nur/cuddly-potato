@@ -5,6 +5,8 @@ const currentuserInputEL = document.querySelector(".current-userInput");
 const prayerTimeList = document.querySelector(".time-prayer-lists");
 const prayerTimeSection = document.querySelector(".section-time-prayer ");
 const currentTimeEL = document.querySelector(".time-box");
+const fajrEL = document.querySelector(".fajr");
+console.log(fajrEL);
 
 const options = {
   method: "GET",
@@ -59,11 +61,29 @@ btnEl.addEventListener("click", api);
 // };
 
 const openTimePrayer = function (userInput, data) {
-  console.log(data.title);
-  console.log(data.city);
+  const title = data.title.slice(0, data.title.indexOf(","));
+  const { country, city } = data;
+
+  console.log(title);
+  console.log(city);
+  console.log(country);
+  console.log(userInput === title.toLowerCase());
+  console.log(userInput === city);
+  console.log(userInput === country);
+
+  // console.log(country);
+
+  // console.log(title);
+  // console.log(data.title.slice(0, data.title.indexOf(",")));
+  // console.log(title.slice(0, title.indexOf(",")).toLowerCase());
+  // console.log(data.city);
 
   if (data.title === null) {
     console.log(data.status_error);
+  }
+
+  if (userInput === title.toLowerCase()) {
+    prayerTimeSection.classList.add("show");
   }
   // if (userInput === "") {
   //   prayerTimeSection.classList.remove("show");

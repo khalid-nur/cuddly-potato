@@ -1,4 +1,4 @@
-/*
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,700;1,400&display=swap"); /*
 
 --- 01 TYPOGRAPHY SYSTEM
 - Font sizes (px)
@@ -11,7 +11,10 @@
 
 
 */
+@import url("https://fonts.googleapis.com/css2?family=Chango&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Teko:wght@400;500;700&display=swap");
 
+/* #dee2e6 */
 * {
   margin: 0;
   padding: 0;
@@ -23,16 +26,24 @@ html {
 }
 
 body {
+  /* font-family: poppins; */
+  /* font-family: chango; */
+  font-family: teko;
+
   line-height: 1;
   /* backdrop-filter: blur(20px);
   background-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 1px 12px rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.3); */
   background: -webkit-gradient(90deg, lightblue, darkblue);
+  background-image: url("/assets/wave-haikei.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
 }
 
 .container {
-  width: 36rem;
+  width: 44rem;
   padding: 0 2rem;
   margin: 0 auto;
 }
@@ -45,6 +56,11 @@ body {
   justify-content: center;
   gap: 1rem;
   padding: 1rem 0rem;
+}
+
+.logo img {
+  width: 6rem;
+  height: 6rem;
 }
 
 /* CURRENT TIME */
@@ -61,11 +77,14 @@ body {
 }
 
 .time-title {
-  font-size: 1.2rem;
+  font-size: 1.8rem;
+  color: #ffffff;
 }
 
 .time-box {
-  font-size: 3rem;
+  font-size: 4rem;
+  color: #f8f9fa;
+  text-shadow: 3px 4px 7px rgba(0, 0, 0, 0.496);
 }
 
 /* PRAYER TIME */
@@ -76,25 +95,38 @@ body {
 
 .current-city {
   margin-bottom: 1rem;
-  font-size: 1.6rem;
+  font-size: 3rem;
+  color: #f8f9fa;
 }
 
 .time-prayer {
-  margin-bottom: 1rems;
+  margin-bottom: 1rem;
 }
 
 .time-prayer-lists {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   gap: 1rem;
 }
 
 .time-prayer-items {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  font-size: 1.2rem;
+  gap: 1rem;
+  /* font-size: 1.2rem; */
+}
+
+.prayer-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.prayer-time {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #f8f9fa;
 }
 
 .hide {
