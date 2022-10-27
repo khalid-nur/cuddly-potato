@@ -1,12 +1,18 @@
 const btnEl = document.querySelector(".btn");
 const show = document.querySelector(".show");
 const inputEL = document.querySelector(".search-input");
+
 const currentuserInputEL = document.querySelector(".current-userInput");
-const prayerTimeList = document.querySelector(".time-prayer-lists");
 const prayerTimeSection = document.querySelector(".section-time-prayer ");
 const currentTimeEL = document.querySelector(".time-box");
+const currentCity = document.querySelector(".current-city");
+
 const fajrEL = document.querySelector(".fajr");
-console.log(fajrEL);
+const sunriseEL = document.querySelector(".sunrise");
+const dhuhuEL = document.querySelector(".dhuhu");
+const asrEL = document.querySelector(".asr");
+const maghribEL = document.querySelector(".maghrib");
+const ishaEL = document.querySelector(".isha");
 
 const options = {
   method: "GET",
@@ -64,32 +70,43 @@ const openTimePrayer = function (userInput, data) {
   const title = data.title.slice(0, data.title.indexOf(","));
   const { country, city } = data;
 
-  console.log(title);
-  console.log(city);
-  console.log(country);
-  console.log(userInput === title.toLowerCase());
-  console.log(userInput === city);
-  console.log(userInput === country);
-
-  // console.log(country);
-
-  // console.log(title);
-  // console.log(data.title.slice(0, data.title.indexOf(",")));
-  // console.log(title.slice(0, title.indexOf(",")).toLowerCase());
-  // console.log(data.city);
-
   if (data.title === null) {
     console.log(data.status_error);
   }
 
-  if (userInput === title.toLowerCase()) {
+  /**
+   * TODO: Make this condition a lot more simpler
+   */
+  if (
+    userInput === title.toLowerCase() ||
+    userInput === title ||
+    userInput === city.toLowerCase() ||
+    userInput === city ||
+    userInput === country.toLowerCase() ||
+    userInput === country
+  ) {
     prayerTimeSection.classList.add("show");
+    currentCity.innerHTML = title;
+    showPrayerTime(data);
   }
+
+  inputEL.value = "";
   // if (userInput === "") {
   //   prayerTimeSection.classList.remove("show");
   // } else {
   //   prayerTimeSection.classList.add("show");
   // }
+};
+
+const showPrayerTime = function (data) {
+  const { fajr, shurooq, dhuhr, asr, maghrib, isha } = data.items[0];
+  console.log(fajr, shurooq, dhuhr, asr, maghrib, isha);
+  fajrEL.innerHTML = fajr;
+  sunriseEL.innerHTML = shurooq;
+  dhuhuEL.innerHTML = dhuhr;
+  asrEL.innerHTML = asr;
+  maghribEL.innerHTML = maghrib;
+  ishaEL.innerHTML = isha;
 };
 
 const getCurrentTime = function () {
