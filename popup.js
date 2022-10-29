@@ -1,3 +1,5 @@
+import API_KEY from "./apikey.js";
+
 const btnEl = document.querySelector(".btn");
 const show = document.querySelector(".show");
 const inputEL = document.querySelector(".search-input");
@@ -17,7 +19,7 @@ const ishaEL = document.querySelector(".isha");
 const options = {
   method: "GET",
   headers: {
-    "X-RapidAPI-Key": "83cadd429amsha663c55328f5108p1a3945jsn29a934929275",
+    "X-RapidAPI-Key": `${API_KEY}`,
     "X-RapidAPI-Host": "muslimsalat.p.rapidapi.com",
   },
 };
@@ -78,16 +80,20 @@ const openTimePrayer = function (userInput, data) {
    * TODO: Make this condition a lot more simpler
    */
   if (
-    userInput === title.toLowerCase() ||
-    userInput === title ||
-    userInput === city.toLowerCase() ||
-    userInput === city ||
-    userInput === country.toLowerCase() ||
-    userInput === country
+    data.status_description != "Failed."
+
+    // userInput === title.toLowerCase() ||
+    // userInput === title ||
+    // userInput === city.toLowerCase() ||
+    // userInput === city ||
+    // userInput === country.toLowerCase() ||
+    // userInput === country
   ) {
     prayerTimeSection.classList.add("show");
-    currentCity.innerHTML = title;
+
+    currentCity.innerHTML = title || data.state;
     showPrayerTime(data);
+    console.log(data.status_description != "Failed.");
   }
 
   inputEL.value = "";
