@@ -24,6 +24,14 @@ const options = {
   },
 };
 
+const options2 = {
+  method: "GET",
+  headers: {
+    "X-RapidAPI-Key": `${API_KEY}`,
+    "X-RapidAPI-Host": "geocodeapi.p.rapidapi.com",
+  },
+};
+
 // btnEl.addEventListener("click", function () {
 //   fetch("https://muslimsalat.p.rapidapi.com/minnesota.json")
 //     .then((response) => response.json())
@@ -46,10 +54,14 @@ const options = {
 //   // input();
 // });
 
-const api = function () {
+const api = function (city) {
   const userInput = inputEL.value;
+  const currentCity = city;
 
-  fetch(`https://muslimsalat.p.rapidapi.com/${userInput}.json`, options)
+  fetch(
+    `https://muslimsalat.p.rapidapi.com/${currentCity ?? userInput}.json`,
+    options
+  )
     .then((response) => response.json())
     .then((response) => {
       const data = response;
@@ -63,10 +75,38 @@ const api = function () {
 
 btnEl.addEventListener("click", api);
 
-// const getPrayerTime = function (data, userInput) {
-//   const { fajr, shurooq, dhuhr, asr, maghrib, isha } = data.items[0];
-//   console.log(fajr, shurooq, dhuhr, asr, maghrib, isha);
-// };
+inputEL.addEventListener("keyup", function (e) {
+  e.preventDefault();
+  if (e.keyCode === 13) {
+    api();
+  }
+});
+
+window.addEventListener("load", function () {
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      console.log(latitude, longitude);
+
+      fetch(
+        `https://geocodeapi.p.rapidapi.com/GetNearestCities?latitude=${latitude}&longitude=${longitude}&range=0`,
+        options2
+      )
+        .then((response) => response.json())
+        .then((response) => {
+          const currentLocation = response[0].City.replace("Saint", "st");
+          console.log(response);
+          // console.log(currentLocation.replace("Saint", "st"));
+          api(currentLocation);
+        })
+        .catch((err) => console.error(err));
+    },
+    function () {
+      console.log("could not get position");
+    }
+  );
+});
 
 const openTimePrayer = function (userInput, data) {
   const title = data.title.slice(0, data.title.indexOf(","));
@@ -91,7 +131,7 @@ const openTimePrayer = function (userInput, data) {
   ) {
     prayerTimeSection.classList.add("show");
 
-    currentCity.innerHTML = title || data.state;
+    currentCity.innerHTML = title || country;
     showPrayerTime(data);
     console.log(data.status_description != "Failed.");
   }
