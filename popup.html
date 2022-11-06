@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
 
+    <!-- <script
+      src="https://kit.fontawesome.com/9025dbb42b.js"
+      crossorigin="anonymous"
+    ></script> -->
+
     <script type="module" defer src="/popup.js"></script>
     <title>Prayer</title>
   </head>
@@ -16,9 +21,25 @@
           <img src="/assets/prayer-time-logo.png" alt="" />
         </div>
         <div class="search-box">
-          <input type="text" class="search-input" placeholder="Enter a City " />
+          <img
+            class="search-icon"
+            src="/assets/location-dot-solid.svg"
+            alt="location Icon"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Enter your location "
+          />
+          <!-- <i class="fa-sharp fa-solid fa-magnifying-glass"></i> -->
+          <button class="btn">
+            <img
+              class="search-icon"
+              src="/assets/magnifying-glass-solid.svg"
+              alt="magnifying glass Icon"
+            />
+          </button>
         </div>
-        <button class="btn">click me</button>
       </header>
 
       <section class="section-current-time">
@@ -28,7 +49,7 @@
         </div>
       </section>
 
-      <section class="section-time-prayer hide">
+      <section class="section-time-prayer">
         <h2 class="current-city">Minnesota</h2>
         <div class="time-prayer">
           <ul class="time-prayer-lists">
