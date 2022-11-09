@@ -32,34 +32,14 @@ const options2 = {
   },
 };
 
-// btnEl.addEventListener("click", function () {
-//   fetch("https://muslimsalat.p.rapidapi.com/minnesota.json")
-//     .then((response) => response.json())
-//     .then((response) => {
-//       console.log(response);
-//       navigator.geolocation.getCurrentPosition(
-//         function (position) {
-//           display(position);
-//         },
-//         function () {
-//           console.log("could not get position");
-//         }
-//       );
-//     })
-//     .catch((err) => console.error(err));
-// });
-
-// window.addEventListener("load", function () {
-//   api();
-//   // input();
-// });
-
-const api = function (city) {
-  const userInput = inputEL.value;
-  const currentCity = city;
+const api = function (currentLocation) {
+  const userInput = inputEL.value.trim();
+  const userCurrentLocation = currentLocation;
 
   fetch(
-    `https://muslimsalat.p.rapidapi.com/${currentCity ?? userInput}.json`,
+    `https://muslimsalat.p.rapidapi.com/${
+      userCurrentLocation ?? userInput
+    }.json`,
     options
   )
     .then((response) => response.json())
@@ -68,12 +48,15 @@ const api = function (city) {
       console.log(data);
 
       openTimePrayer(userInput, data);
+      error(data);
       // getPrayerTime(data, userInput);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+    });
 };
 
-btnEl.addEventListener("click", api);
+btnEl.addEventListener("click", () => api());
 
 inputEL.addEventListener("keyup", function (e) {
   e.preventDefault();
@@ -102,46 +85,27 @@ window.addEventListener("load", function () {
         })
         .catch((err) => console.error(err));
     },
-    function () {
+    function (position) {
+      warningMessage();
       console.log("could not get position");
     }
   );
 });
 
 const openTimePrayer = function (userInput, data) {
-  const title = data.title.slice(0, data.title.indexOf(","));
+  // const title = data.title.slice(0, data.title.indexOf(","));
+  const title = data.title;
   const { country, city } = data;
 
-  if (data.title === null) {
-    console.log(data.status_error);
-  }
-
-  /**
-   * TODO: Make this condition a lot more simpler
-   */
-  if (
-    data.status_description != "Failed."
-
-    // userInput === title.toLowerCase() ||
-    // userInput === title ||
-    // userInput === city.toLowerCase() ||
-    // userInput === city ||
-    // userInput === country.toLowerCase() ||
-    // userInput === country
-  ) {
+  if (data.status_description === "Success.") {
     prayerTimeSection.classList.add("show");
 
     currentCity.innerHTML = title || country;
     showPrayerTime(data);
-    console.log(data.status_description != "Failed.");
+    // console.log(data.status_description != "Failed.");
   }
 
   inputEL.value = "";
-  // if (userInput === "") {
-  //   prayerTimeSection.classList.remove("show");
-  // } else {
-  //   prayerTimeSection.classList.add("show");
-  // }
 };
 
 const showPrayerTime = function (data) {
@@ -155,10 +119,33 @@ const showPrayerTime = function (data) {
   ishaEL.innerHTML = isha;
 };
 
+const error = function (data) {
+  if (data.title === null) {
+    prayerTimeSection.classList.remove("show");
+
+    console.log(data.status_error);
+  }
+};
+
+const warningMessage = function () {
+  const alertEL = document.querySelector(".alert");
+  const closeBtn = document.querySelector(".close-btn");
+  alertEL.classList.remove("close");
+
+  setTimeout(() => {
+    alertEL.classList.add("close");
+  }, 5000);
+
+  const closeTime = closeBtn.addEventListener("click", () => {
+    alertEL.classList.add("close");
+  });
+};
+
 const getCurrentTime = function () {
   const date = new Date();
   const locale = navigator.language;
   const currentDate = date.toLocaleTimeString(`${locale}`);
+  // console.log(currentDate);
 
   currentTimeEL.innerHTML = currentDate;
 
@@ -168,29 +155,3 @@ const getCurrentTime = function () {
 };
 
 getCurrentTime();
-
-// const display = function (position) {
-//   const latitude = position.coords.latitude;
-//   const longitude = position.coords.longitude;
-//   show.innerHTML = `latitude ${latitude}`;
-// };
-// const input = function (data) {
-//   btnEl.addEventListener("click", function (e) {
-//     e.preventDefault;
-
-//     const userInput = inputEL.value;
-//     currentuserInputEL.innerHTML = userInput;
-//     api(userInput);
-//     console.log(data);
-//   });
-// };
-
-// navigator.geolocation.getCurrentPosition(
-//   function (position) {
-//     // display(position);
-//     input(data, position);
-//   },
-//   function () {
-//     console.log("could not get position");
-//   }
-// );
