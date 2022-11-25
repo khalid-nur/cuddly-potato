@@ -1,13 +1,12 @@
 import API_KEY from "./apikey.js";
 
 const btnEl = document.querySelector(".btn");
-const show = document.querySelector(".show");
 const inputEL = document.querySelector(".search-input");
 
-const currentuserInputEL = document.querySelector(".current-userInput");
 const prayerTimeSection = document.querySelector(".section-time-prayer ");
 const currentTimeEL = document.querySelector(".time-box");
 const currentCity = document.querySelector(".current-city");
+const timeBoxEL = document.querySelector(".current-time-box");
 
 const fajrEL = document.querySelector(".fajr");
 const sunriseEL = document.querySelector(".sunrise");
@@ -48,8 +47,7 @@ const api = function (currentLocation) {
       console.log(data);
 
       openTimePrayer(userInput, data);
-      error(data);
-      // getPrayerTime(data, userInput);
+      errorMessage(data);
     })
     .catch((err) => {
       console.error(err);
@@ -93,19 +91,20 @@ window.addEventListener("load", function () {
 });
 
 const openTimePrayer = function (userInput, data) {
-  // const title = data.title.slice(0, data.title.indexOf(","));
   const title = data.title;
   const { country, city } = data;
 
   if (data.status_description === "Success.") {
-    prayerTimeSection.classList.add("show");
+    prayerTimeSection.classList.add("open");
+    timeBoxEL.classList.remove("hide");
+    document.querySelector(".error-message").classList.add("hide");
 
     currentCity.innerHTML = title || country;
     showPrayerTime(data);
-    // console.log(data.status_description != "Failed.");
   }
 
   inputEL.value = "";
+  inputEL.blur();
 };
 
 const showPrayerTime = function (data) {
@@ -119,11 +118,26 @@ const showPrayerTime = function (data) {
   ishaEL.innerHTML = isha;
 };
 
-const error = function (data) {
-  if (data.title === null) {
-    prayerTimeSection.classList.remove("show");
+const errorMessage = function (data) {
+  if (data.status_description != "Success.") {
+    prayerTimeSection.classList.remove("open");
+    timeBoxEL.classList.add("hide");
+    document.querySelector(".error-message").classList.remove("hide");
+    document.querySelector(".error-message").classList.add("show");
 
-    console.log(data.status_error);
+    const errorMessage = data.status_error.invalid_query;
+
+    const headerContainer = document.querySelector(".error-message");
+
+    const markup = `
+     
+      <h1 class="error-text">
+        ${errorMessage}
+      </h1>
+  
+      `;
+    headerContainer.textContent = " ";
+    headerContainer.insertAdjacentHTML("afterbegin", markup);
   }
 };
 
@@ -144,8 +158,7 @@ const warningMessage = function () {
 const getCurrentTime = function () {
   const date = new Date();
   const locale = navigator.language;
-  const currentDate = date.toLocaleTimeString(`${locale}`);
-  // console.log(currentDate);
+  let currentDate = date.toLocaleTimeString(`${locale}`);
 
   currentTimeEL.innerHTML = currentDate;
 
