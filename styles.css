@@ -162,13 +162,13 @@ body {
   color: #f8f9fa;
 }
 
-.show {
+.open {
   display: block;
-  animation-name: show;
+  animation-name: open;
   animation-duration: 2s;
 }
 
-@keyframes show {
+@keyframes open {
   0% {
     opacity: 0;
   }
@@ -177,6 +177,16 @@ body {
     opacity: 1;
   }
 }
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+/* ALERT MESSAGE */
 
 .alert {
   display: flex;
@@ -245,10 +255,14 @@ body {
 .close:hover {
   color: red;
 }
-/* .alert-warning {
-  border: 1px solid var(--warning);
-  border-left: 5px solid var(--warning);
+
+/* USER INPUT ERROR MESSAGE */
+
+.error-message {
+  text-align: center;
 }
-.alert-warning > .icon {
-  background-color: var(--warning);
-} */
+
+.error-text {
+  font-size: 2.1rem;
+  color: #ffffff;
+}

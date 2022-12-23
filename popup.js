@@ -1,5 +1,6 @@
 import API_KEY from "./apikey.js";
 
+// Elements
 const btnEl = document.querySelector(".btn");
 const inputEL = document.querySelector(".search-input");
 
@@ -7,6 +8,7 @@ const prayerTimeSection = document.querySelector(".section-time-prayer ");
 const currentTimeEL = document.querySelector(".time-box");
 const currentCity = document.querySelector(".current-city");
 const timeBoxEL = document.querySelector(".current-time-box");
+const errorMessageEL = document.querySelector(".error-message");
 
 const fajrEL = document.querySelector(".fajr");
 const sunriseEL = document.querySelector(".sunrise");
@@ -44,9 +46,7 @@ const api = function (currentLocation) {
     .then((response) => response.json())
     .then((response) => {
       const data = response;
-      console.log(data);
-
-      openTimePrayer(userInput, data);
+      openTimePrayer(data);
       errorMessage(data);
     })
     .catch((err) => {
@@ -54,6 +54,7 @@ const api = function (currentLocation) {
     });
 };
 
+// Event Handlers
 btnEl.addEventListener("click", () => api());
 
 inputEL.addEventListener("keyup", function (e) {
@@ -63,22 +64,19 @@ inputEL.addEventListener("keyup", function (e) {
   }
 });
 
+// This event will be started up automatically when the user has location access allowed.
 window.addEventListener("load", function () {
   navigator.geolocation.getCurrentPosition(
     function (position) {
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      console.log(latitude, longitude);
-
       fetch(
         `https://geocodeapi.p.rapidapi.com/GetNearestCities?latitude=${latitude}&longitude=${longitude}&range=0`,
         options2
       )
         .then((response) => response.json())
         .then((response) => {
-          const currentLocation = response[0].City.replace("Saint", "st");
-          console.log(response);
-          // console.log(currentLocation.replace("Saint", "st"));
+          const currentLocation = response[0].City.replace("Saint", "St");
           api(currentLocation);
         })
         .catch((err) => console.error(err));
@@ -90,16 +88,27 @@ window.addEventListener("load", function () {
   );
 });
 
-const openTimePrayer = function (userInput, data) {
+// Displays the current city/country of the user's input
+const openTimePrayer = function (data) {
   const title = data.title;
   const { country, city } = data;
 
   if (data.status_description === "Success.") {
     prayerTimeSection.classList.add("open");
     timeBoxEL.classList.remove("hide");
-    document.querySelector(".error-message").classList.add("hide");
+    errorMessageEL.classList.add("hide");
 
-    currentCity.innerHTML = title || country;
+    if (data.title !== "") {
+      currentCity.innerHTML = title;
+    }
+
+    if (data.title === "") {
+      currentCity.innerHTML = city;
+    }
+
+    if (data.title === "" && data.city === "") {
+      currentCity.innerHTML = country;
+    }
     showPrayerTime(data);
   }
 
@@ -107,9 +116,9 @@ const openTimePrayer = function (userInput, data) {
   inputEL.blur();
 };
 
+// Shows the time for the prayers and sunrise
 const showPrayerTime = function (data) {
   const { fajr, shurooq, dhuhr, asr, maghrib, isha } = data.items[0];
-  console.log(fajr, shurooq, dhuhr, asr, maghrib, isha);
   fajrEL.innerHTML = fajr;
   sunriseEL.innerHTML = shurooq;
   dhuhuEL.innerHTML = dhuhr;
@@ -118,29 +127,28 @@ const showPrayerTime = function (data) {
   ishaEL.innerHTML = isha;
 };
 
+// Alerts users when their input is invalid and displays a message
 const errorMessage = function (data) {
   if (data.status_description != "Success.") {
     prayerTimeSection.classList.remove("open");
     timeBoxEL.classList.add("hide");
-    document.querySelector(".error-message").classList.remove("hide");
-    document.querySelector(".error-message").classList.add("show");
+    errorMessageEL.classList.remove("hide");
+    errorMessageEL.classList.add("show");
 
     const errorMessage = data.status_error.invalid_query;
 
     const headerContainer = document.querySelector(".error-message");
 
     const markup = `
-     
       <h1 class="error-text">
         ${errorMessage}
-      </h1>
-  
-      `;
+      </h1> `;
     headerContainer.textContent = " ";
     headerContainer.insertAdjacentHTML("afterbegin", markup);
   }
 };
 
+// Users are notified when location access is switched off
 const warningMessage = function () {
   const alertEL = document.querySelector(".alert");
   const closeBtn = document.querySelector(".close-btn");
@@ -155,6 +163,7 @@ const warningMessage = function () {
   });
 };
 
+// Display the current time
 const getCurrentTime = function () {
   const date = new Date();
   const locale = navigator.language;
