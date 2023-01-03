@@ -76,14 +76,20 @@ window.addEventListener("load", function () {
       )
         .then((response) => response.json())
         .then((response) => {
-          const currentLocation = response[0].City.replace("Saint", "St");
+          let currentLocation;
+          let maxPopulation = 0;
+          response.forEach((obj) => {
+            if (obj.Population > maxPopulation) {
+              currentLocation = obj.City.replace("Saint", "St");
+              maxPopulation = obj.Population;
+            }
+          });
           api(currentLocation);
         })
         .catch((err) => console.error(err));
     },
     function (position) {
       warningMessage();
-      console.log("could not get position");
     }
   );
 });
